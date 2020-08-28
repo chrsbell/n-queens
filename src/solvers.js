@@ -26,7 +26,7 @@ window.placeRook = function(board) {
         board.togglePiece(i, j);
       } // [1, 0, 0, 0, 0]
       if (board.hasRowConflictAt(i) || board.hasColConflictAt(j) ) {
-        board.togglePiece(i, j);
+        board.togglePiece(i, j);  //
       }
 
     }
