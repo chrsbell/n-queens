@@ -79,13 +79,19 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return this.attributes[rowIndex].some((x)=>x === 1);
-
+      // debugger;
+      var count = 0;
+      return this.attributes[rowIndex].some(function (x) { if (x === 1) { count++; } if (count === 2) { return true; } });
     },
+
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return this.attributes.some((x)=> hasRowConflictAt(x));
+
+      for (var i = 0; i < this.attributes.n; i++) {
+        if (this.hasRowConflictAt(i) === true) { return true; }
+      }
+      return false;
     },
 
 
@@ -95,11 +101,20 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      //debugger;
+      var count = 0;
+      for (var i = 0; i < this.attributes.n; i++) {
+      //  console.log(this.attributes[i][colIndex]);
+        if (this.attributes[i][colIndex] === 1) { count++; if (count === 2) { return true; } }
+      }
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      for (var i = 0; i < this.attributes[0].length; i++) {
+        if (this.hasColConflictAt(i) === true) { return true; }
+      }
       return false; // fixme
     },
 
@@ -109,12 +124,26 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    hasMajorDiagonalConflictAt: function(majorDiagonal) {
+      var count = 0;
+      //console.log(majorDiagonal);
+      for (var i = 0; i < this.attributes[0].length - majorDiagonal; i++) {
+        if (this.attributes[i][i + majorDiagonal] === 1) { count++; if (count === 2) { return true; } }
+      }
+      count = 0;
+      for (var i = 0; i < this.attributes[0].length - majorDiagonal; i++) {
+        if (this.attributes[i + majorDiagonal][i] === 1) { count++; if (count === 2) { return true; } }
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+
+      for (var i = 0; i < this.attributes[0].length; i++) {
+        if (this.hasMajorDiagonalConflictAt(i) === true) { return true; }
+      }
+
       return false; // fixme
     },
 
@@ -124,14 +153,37 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+
+    hasMinorDiagonalConflictAt: function(minorDiagonal) { // 1
+      var count = 0;
+      // console.log('minorDiagonal: ' + minorDiagonal);
+      for (var i = 0; i <= minorDiagonal; i++) { // 0 ,1 ,2
+        //console.log('[' + i + ',' + (minorDiagonal - i) + ']');
+        if (this.attributes[i][minorDiagonal - i] === 1) { count++; if (count === 2) { return true; } }
+      }
+      count = 0;
+      var offset = this.attributes[0].length - 1 - minorDiagonal; //3
+      for (var i = 0; i <= minorDiagonal; i++) { // 1, 2, 3
+        // console.log('[' + (i+1) +',' + (minorDiagonal - i + 1) + ']');
+        if (this.attributes[i + offset][minorDiagonal + offset - i] === 1) { count++; if (count === 2) { return true; } }
+      }
+
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+
+      for (var i = this.attributes[0].length - 1; i >= 0; i--) {
+        if (this.hasMinorDiagonalConflictAt(i) === true) { return true; }
+      }
+
       return false; // fixme
-    }
+    },
+
+
+
+
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
@@ -149,6 +201,3 @@
 }());
 
 
-// var board = new Board({n: 5});
-// board.hasRowConflictAt(1);
-// console.log(board);

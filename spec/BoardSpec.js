@@ -26,6 +26,8 @@ describe('Board', function() {
       [0, 0, 0, 0],
       [0, 0, 0, 0]
     ]);
+
+    console.log('empty');
   });
 
   describe('Board with row conflicts', function() {
